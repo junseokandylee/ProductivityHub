@@ -1,0 +1,36 @@
+{
+  "name": "productivity-hub-e2e-tests",
+  "version": "1.0.0",
+  "description": "End-to-end tests for ProductivityHub Analytics",
+  "type": "module",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug",
+    "test:ui": "playwright test --ui",
+    "test:analytics": "playwright test tests/analytics-dashboard.spec.ts tests/campaign-analytics.spec.ts",
+    "test:performance": "playwright test tests/api-performance.spec.ts",
+    "test:contract": "playwright test tests/api-contract.spec.ts",
+    "test:accessibility": "playwright test tests/accessibility.spec.ts",
+    "test:security": "playwright test tests/security-isolation.spec.ts",
+    "test:realtime": "playwright test tests/realtime-updates.spec.ts",
+    "test:smoke": "playwright test tests/analytics-dashboard.spec.ts --grep='@smoke'",
+    "test:ci": "playwright test --reporter=json --output-dir=test-results",
+    "install-browsers": "playwright install",
+    "show-report": "playwright show-report",
+    "generate-seed-data": "cd ../tests && node setup/generate-seed.js"
+  },
+  "dependencies": {
+    "@playwright/test": "^1.55.0",
+    "axe-playwright": "^2.0.3",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.10.2",
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

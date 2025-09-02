@@ -1,0 +1,59 @@
+{
+  "name": "political-productivity-hub",
+  "version": "1.0.0",
+  "description": "Political Productivity Hub - MVP for Messaging & Contact Core",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\"",
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "cd backend && dotnet run --project ProductivityHub.Api",
+    "dev:unix": "./scripts/dev.sh",
+    "dev:windows": "scripts\\dev.bat",
+    "build": "npm run build:frontend && npm run build:backend",
+    "build:frontend": "cd frontend && npm run build",
+    "build:backend": "cd backend && dotnet build",
+    "test": "npm run test:frontend && npm run test:backend && npm run test:e2e",
+    "test:frontend": "cd frontend && npm run test",
+    "test:backend": "cd backend && dotnet test",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:debug": "playwright test --debug",
+    "lint": "npm run lint:frontend",
+    "lint:frontend": "cd frontend && npm run lint",
+    "typecheck": "npm run typecheck:frontend",
+    "typecheck:frontend": "cd frontend && npm run typecheck || npx tsc --noEmit",
+    "install:all": "npm install && cd frontend && npm install",
+    "clean": "npm run clean:frontend && npm run clean:backend",
+    "clean:frontend": "cd frontend && rm -rf node_modules .next",
+    "clean:backend": "cd backend && dotnet clean",
+    "setup": "npm run setup:env && npm run install:all",
+    "setup:env": "node -e \"const fs = require('fs'); if (!fs.existsSync('.env') && fs.existsSync('.env.example')) fs.copyFileSync('.env.example', '.env'); console.log('Environment setup complete!');\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "workspaces": [
+    "frontend"
+  ],
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "keywords": [
+    "political",
+    "productivity",
+    "messaging",
+    "contact-management",
+    "sms",
+    "kakao"
+  ],
+  "author": "Political Productivity Hub Team",
+  "license": "MIT",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2"
+  }
+}

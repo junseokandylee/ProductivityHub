@@ -1,0 +1,13 @@
+{
+  "name": "productivity-hub-tests",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "seed": "node --loader ts-node/esm setup/db-seed.ts"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^10.0.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5"
+  }
+}

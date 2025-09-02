@@ -1,0 +1,206 @@
+name: E2E Tests
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'frontend/**'
+      - 'backend/**'
+      - 'tests/**'
+      - 'playwright.config.ts'
+      - 'package*.json'
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - 'frontend/**'
+      - 'backend/**'
+      - 'tests/**'
+      - 'playwright.config.ts'
+      - 'package*.json'
+
+jobs:
+  e2e-tests:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_PASSWORD: testpassword
+          POSTGRES_USER: testuser
+          POSTGRES_DB: productivity_hub_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 18
+        cache: 'npm'
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '9.0.x'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Install frontend dependencies
+      run: cd frontend && npm install
+
+    - name: Install Playwright browsers
+      run: npx playwright install chromium
+
+    - name: Install Playwright system dependencies
+      run: npx playwright install-deps
+
+    - name: Set up test environment variables
+      run: |
+        cat > .env.test << EOF
+        # Database
+        DATABASE_URL=Server=localhost;Port=5432;Database=productivity_hub_test;User Id=testuser;Password=testpassword;
+        
+        # Redis
+        REDIS_URL=localhost:6379
+        
+        # JWT
+        JWT_SECRET=test-secret-key-for-e2e-tests-only
+        JWT_ISSUER=productivity-hub-test
+        JWT_AUDIENCE=productivity-hub-test
+        
+        # Test mode
+        NODE_ENV=test
+        ASPNETCORE_ENVIRONMENT=Test
+        
+        # E2E specific
+        PLAYWRIGHT_BASE_URL=http://localhost:3000
+        EOF
+
+    - name: Build backend
+      run: cd backend && dotnet build
+
+    - name: Run database migrations (test)
+      run: cd backend && dotnet ef database update --connection "Server=localhost;Port=5432;Database=productivity_hub_test;User Id=testuser;Password=testpassword;"
+      env:
+        ASPNETCORE_ENVIRONMENT: Test
+
+    - name: Build frontend
+      run: cd frontend && npm run build
+
+    - name: Start backend (test mode)
+      run: |
+        cd backend && dotnet run --project ProductivityHub.Api --configuration Release --no-build &
+        echo $! > backend.pid
+      env:
+        ASPNETCORE_ENVIRONMENT: Test
+        ASPNETCORE_URLS: http://localhost:5000
+        DATABASE_URL: "Server=localhost;Port=5432;Database=productivity_hub_test;User Id=testuser;Password=testpassword;"
+        REDIS_URL: localhost:6379
+
+    - name: Wait for backend to be ready
+      run: |
+        timeout 60 bash -c 'until curl -f http://localhost:5000/health; do sleep 2; done'
+
+    - name: Start frontend (test mode)
+      run: |
+        cd frontend && npm run start &
+        echo $! > frontend.pid
+      env:
+        NODE_ENV: test
+        NEXT_PUBLIC_API_URL: http://localhost:5000
+
+    - name: Wait for frontend to be ready
+      run: |
+        timeout 60 bash -c 'until curl -f http://localhost:3000; do sleep 2; done'
+
+    - name: Run E2E tests
+      run: npm run test:e2e
+      env:
+        PLAYWRIGHT_BASE_URL: http://localhost:3000
+
+    - name: Upload Playwright report
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: playwright-report
+        path: playwright-report/
+        retention-days: 30
+
+    - name: Upload test videos and traces
+      uses: actions/upload-artifact@v4
+      if: failure()
+      with:
+        name: playwright-videos-traces
+        path: |
+          test-results/
+        retention-days: 30
+
+    - name: Stop services
+      if: always()
+      run: |
+        # Stop frontend
+        if [ -f frontend.pid ]; then
+          kill $(cat frontend.pid) || true
+          rm frontend.pid
+        fi
+        
+        # Stop backend
+        if [ -f backend.pid ]; then
+          kill $(cat backend.pid) || true
+          rm backend.pid
+        fi
+
+  accessibility-tests:
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 18
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Install Playwright browsers
+      run: npx playwright install chromium
+
+    - name: Install Playwright system dependencies
+      run: npx playwright install-deps
+
+    - name: Run accessibility tests only
+      run: npx playwright test tests/e2e/campaign-wizard-accessibility.spec.ts
+      env:
+        PLAYWRIGHT_BASE_URL: http://localhost:3000
+
+    - name: Upload accessibility report
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: accessibility-report
+        path: playwright-report/
+        retention-days: 30

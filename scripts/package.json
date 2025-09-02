@@ -1,0 +1,26 @@
+{
+  "name": "productivity-hub-test-data",
+  "version": "1.0.0",
+  "description": "Test data generation utilities for Political Productivity Hub",
+  "main": "generate-test-data.js",
+  "scripts": {
+    "generate": "node generate-test-data.js",
+    "generate:small": "node generate-test-data.js --contacts 1000 --campaigns 5",
+    "generate:medium": "node generate-test-data.js --contacts 5000 --campaigns 15",
+    "generate:large": "node generate-test-data.js --contacts 10000 --campaigns 25",
+    "generate:csv": "node generate-test-data.js --format csv",
+    "generate:json": "node generate-test-data.js --format json"
+  },
+  "dependencies": {
+    "csv-writer": "^1.6.0"
+  },
+  "keywords": [
+    "test-data",
+    "korean",
+    "political",
+    "contacts",
+    "campaigns"
+  ],
+  "author": "Political Productivity Hub Team",
+  "license": "MIT"
+}

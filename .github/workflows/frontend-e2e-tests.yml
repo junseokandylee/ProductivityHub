@@ -1,0 +1,395 @@
+name: Frontend E2E Tests
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'frontend/**'
+      - '.github/workflows/frontend-e2e-tests.yml'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'frontend/**'
+      - '.github/workflows/frontend-e2e-tests.yml'
+
+env:
+  NODE_VERSION: '18'
+  PLAYWRIGHT_BROWSERS_PATH: 0
+
+jobs:
+  unit-tests:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run type checking
+        run: npm run type-check
+
+      - name: Run unit tests
+        run: npm run test:coverage
+
+      - name: Upload coverage reports
+        uses: codecov/codecov-action@v3
+        with:
+          directory: ./frontend
+          flags: frontend-unit
+          name: frontend-unit-coverage
+
+  e2e-tests:
+    name: E2E Tests
+    runs-on: ubuntu-latest
+    needs: unit-tests
+    defaults:
+      run:
+        working-directory: ./frontend
+
+    strategy:
+      fail-fast: false
+      matrix:
+        project: [chromium, firefox, webkit]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright Browsers
+        run: npm run e2e:install
+
+      - name: Build application
+        run: npm run build
+
+      - name: Run E2E tests
+        run: npx playwright test --project=${{ matrix.project }}
+        env:
+          CI: true
+          BASE_URL: http://localhost:13000
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-results-${{ matrix.project }}
+          path: |
+            frontend/playwright-report/
+            frontend/test-results/
+            frontend/playwright-results.json
+          retention-days: 7
+
+      - name: Upload Playwright Report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report-${{ matrix.project }}
+          path: frontend/playwright-report/
+          retention-days: 30
+
+  mobile-tests:
+    name: Mobile E2E Tests
+    runs-on: ubuntu-latest
+    needs: unit-tests
+    defaults:
+      run:
+        working-directory: ./frontend
+
+    strategy:
+      fail-fast: false
+      matrix:
+        project: ['Mobile Chrome', 'Mobile Safari']
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright Browsers
+        run: npm run e2e:install
+
+      - name: Build application
+        run: npm run build
+
+      - name: Run Mobile E2E tests
+        run: npx playwright test --project="${{ matrix.project }}"
+        env:
+          CI: true
+          BASE_URL: http://localhost:13000
+
+      - name: Upload mobile test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-mobile-results-${{ matrix.project }}
+          path: |
+            frontend/playwright-report/
+            frontend/test-results/
+          retention-days: 7
+
+  accessibility-tests:
+    name: Accessibility Tests
+    runs-on: ubuntu-latest
+    needs: unit-tests
+    defaults:
+      run:
+        working-directory: ./frontend
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright Browsers
+        run: npm run e2e:install
+
+      - name: Build application
+        run: npm run build
+
+      - name: Run Accessibility tests
+        run: npx playwright test --grep="Accessibility"
+        env:
+          CI: true
+          BASE_URL: http://localhost:13000
+
+      - name: Upload accessibility results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: accessibility-test-results
+          path: |
+            frontend/playwright-report/
+            frontend/test-results/
+          retention-days: 7
+
+  security-tests:
+    name: Security Tests
+    runs-on: ubuntu-latest
+    needs: unit-tests
+    defaults:
+      run:
+        working-directory: ./frontend
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright Browsers
+        run: npm run e2e:install
+
+      - name: Build application
+        run: npm run build
+
+      - name: Run Security tests
+        run: npx playwright test --grep="Tenant Isolation|Security"
+        env:
+          CI: true
+          BASE_URL: http://localhost:13000
+
+      - name: Upload security test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: security-test-results
+          path: |
+            frontend/playwright-report/
+            frontend/test-results/
+          retention-days: 7
+
+  performance-tests:
+    name: Performance Tests
+    runs-on: ubuntu-latest
+    needs: unit-tests
+    defaults:
+      run:
+        working-directory: ./frontend
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright Browsers
+        run: npm run e2e:install
+
+      - name: Build application
+        run: npm run build
+
+      - name: Run Performance tests
+        run: npx playwright test --grep="Performance"
+        env:
+          CI: true
+          BASE_URL: http://localhost:13000
+
+      - name: Upload performance results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: performance-test-results
+          path: |
+            frontend/playwright-report/
+            frontend/test-results/
+          retention-days: 7
+
+  test-report:
+    name: Publish Test Results
+    runs-on: ubuntu-latest
+    needs: [e2e-tests, mobile-tests, accessibility-tests, security-tests, performance-tests]
+    if: always()
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download all test artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: test-results/
+
+      - name: Publish Test Report
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: Frontend E2E Test Results
+          path: test-results/**/*.json
+          reporter: playwright-json
+          fail-on-error: true
+
+      - name: Create Test Summary
+        if: always()
+        run: |
+          echo "# Frontend E2E Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## Test Execution Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          
+          if [[ "${{ needs.e2e-tests.result }}" == "success" ]]; then
+            echo "✅ **Desktop Browser Tests**: Passed" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ **Desktop Browser Tests**: Failed" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          if [[ "${{ needs.mobile-tests.result }}" == "success" ]]; then
+            echo "✅ **Mobile Browser Tests**: Passed" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ **Mobile Browser Tests**: Failed" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          if [[ "${{ needs.accessibility-tests.result }}" == "success" ]]; then
+            echo "✅ **Accessibility Tests**: Passed" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ **Accessibility Tests**: Failed" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          if [[ "${{ needs.security-tests.result }}" == "success" ]]; then
+            echo "✅ **Security Tests**: Passed" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ **Security Tests**: Failed" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          if [[ "${{ needs.performance-tests.result }}" == "success" ]]; then
+            echo "✅ **Performance Tests**: Passed" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ **Performance Tests**: Failed" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## Artifacts" >> $GITHUB_STEP_SUMMARY
+          echo "- 📊 [Playwright HTML Reports](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})" >> $GITHUB_STEP_SUMMARY
+          echo "- 📋 [Test Results & Screenshots](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})" >> $GITHUB_STEP_SUMMARY
+          echo "- 🎥 [Test Videos (failures only)](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})" >> $GITHUB_STEP_SUMMARY
+
+  # Conditional job for PR comments
+  pr-comment:
+    name: PR Comment
+    runs-on: ubuntu-latest
+    needs: [e2e-tests, mobile-tests, accessibility-tests, security-tests, performance-tests]
+    if: github.event_name == 'pull_request' && always()
+    
+    steps:
+      - name: Comment PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const results = {
+              'Desktop Browsers': '${{ needs.e2e-tests.result }}',
+              'Mobile Browsers': '${{ needs.mobile-tests.result }}',
+              'Accessibility': '${{ needs.accessibility-tests.result }}',
+              'Security': '${{ needs.security-tests.result }}',
+              'Performance': '${{ needs.performance-tests.result }}'
+            };
+            
+            let comment = '## 🧪 Frontend E2E Test Results\n\n';
+            
+            for (const [category, result] of Object.entries(results)) {
+              const icon = result === 'success' ? '✅' : '❌';
+              comment += `${icon} **${category}**: ${result === 'success' ? 'Passed' : 'Failed'}\n`;
+            }
+            
+            comment += '\n📊 [View detailed results](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})';
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
