@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack --port 13000",
+    "dev": "next dev --port 13000",
+    "dev:turbo": "next dev --turbopack --port 13000",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -17,6 +18,10 @@
     "e2e:report": "playwright show-report",
     "e2e:install": "playwright install",
     "test:ci": "npm run test && npm run e2e",
+    "test:routes": "node route-coverage-test.js",
+    "test:routes:dev": "node dev-route-test.js",
+    "test:routes:prod": "node test-with-build.js",
+    "test:performance": "node performance-test.js", 
     "type-check": "tsc --noEmit"
   },
   "dependencies": {

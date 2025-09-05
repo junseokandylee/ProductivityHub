@@ -1,19 +1,23 @@
 import { test, expect } from '@playwright/test';
 
 // Test configuration
-const BASE_URL = 'http://localhost:3000';
+const BASE_URL = 'http://localhost:13000';
 
-// Route definitions based on route inventory
+// Route definitions based on route inventory - UPDATED with all implemented routes
 const PUBLIC_ROUTES = [
   '/auth/login',
   '/auth/signup', 
   '/auth/reset-password',
-  '/auth/verify-email'
+  '/auth/verify-email',
+  '/terms',
+  '/privacy'
 ];
 
 const PROTECTED_ROUTES = [
   '/',
   '/dashboard',
+  '/calendar',
+  '/activity-score',
   '/contacts',
   '/contacts/import',
   '/contacts/export',
@@ -21,6 +25,9 @@ const PROTECTED_ROUTES = [
   '/segments',
   '/campaigns',
   '/campaigns/new',
+  '/campaigns/templates',
+  '/campaigns/scheduled',
+  '/campaigns/personalization',
   '/inbox',
   '/inbox/auto-reply',
   '/reports',
@@ -29,7 +36,14 @@ const PROTECTED_ROUTES = [
   '/reports/contacts',
   '/reports/quota',
   '/analytics',
+  '/analytics/campaigns',
+  '/analytics/ab-tests',
+  '/analytics/costs',
   '/settings',
+  '/settings/profile',
+  '/settings/tenant',
+  '/settings/billing',
+  '/settings/api-keys',
   '/settings/organization',
   '/settings/channels',
   '/settings/users',
@@ -39,7 +53,9 @@ const PROTECTED_ROUTES = [
   '/help/guide',
   '/help/tutorial',
   '/help/faq',
-  '/help/contact'
+  '/help/contact',
+  '/notifications',
+  '/compliance'
 ];
 
 const DYNAMIC_ROUTES = [
@@ -104,6 +120,27 @@ async function expectKeyElements(page: any, route: string) {
   
   if (route.startsWith('/help')) {
     await expect(page.locator('h1, h2').filter({ hasText: /도움말|Help/ })).toBeVisible();
+  }
+  
+  // Advanced feature specific tests
+  if (route === '/campaigns/personalization') {
+    await expect(page.locator('h1').filter({ hasText: /AI.*개인화|개인화.*엔진/ })).toBeVisible();
+  }
+  
+  if (route === '/compliance') {
+    await expect(page.locator('h1').filter({ hasText: /규정.*준수|컴플라이언스/ })).toBeVisible();
+  }
+  
+  if (route === '/calendar') {
+    await expect(page.locator('h1').filter({ hasText: /일정|캘린더|Calendar/ })).toBeVisible();
+  }
+  
+  if (route === '/activity-score') {
+    await expect(page.locator('h1').filter({ hasText: /활동.*점수|Activity.*Score/ })).toBeVisible();
+  }
+  
+  if (route === '/notifications') {
+    await expect(page.locator('h1').filter({ hasText: /알림|Notifications/ })).toBeVisible();
   }
 }
 
