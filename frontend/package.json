@@ -21,7 +21,15 @@
     "test:routes": "node route-coverage-test.js",
     "test:routes:dev": "node dev-route-test.js",
     "test:routes:prod": "node test-with-build.js",
-    "test:performance": "node performance-test.js", 
+    "test:performance": "node performance-test.js",
+    "test:visual": "node visual-testing-agent.js",
+    "test:visual:baseline": "node visual-testing-agent.js --mode baseline",
+    "test:visual:compare": "node visual-testing-agent.js --mode compare",
+    "test:visual:report": "node visual-testing-agent.js --mode report",
+    "test:visual:clean": "rm -rf visual-test-results screenshots baselines diffs",
+    "test:visual:simple": "node simple-visual-test.js",
+    "test:visual:simple:compare": "node simple-visual-test.js --compare",
+    "test:all": "npm run test:routes:dev && npm run test:visual:simple",
     "type-check": "tsc --noEmit"
   },
   "dependencies": {

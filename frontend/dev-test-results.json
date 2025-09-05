@@ -1,0 +1,72 @@
+[
+  {
+    "route": "/",
+    "status": 200,
+    "title": "Political Productivity Hub",
+    "hasContent": true,
+    "hasKorean": true,
+    "textLength": 11042,
+    "hasRealError": false,
+    "success": true
+  },
+  {
+    "route": "/auth/login",
+    "status": 200,
+    "title": "Political Productivity Hub",
+    "hasContent": true,
+    "hasKorean": true,
+    "textLength": 12639,
+    "hasRealError": false,
+    "success": true
+  },
+  {
+    "route": "/campaigns",
+    "status": 200,
+    "title": "Political Productivity Hub",
+    "hasContent": true,
+    "hasKorean": true,
+    "textLength": 11543,
+    "hasRealError": false,
+    "success": true
+  },
+  {
+    "route": "/campaigns/personalization",
+    "status": 200,
+    "title": "Political Productivity Hub",
+    "hasContent": true,
+    "hasKorean": true,
+    "textLength": 13042,
+    "hasRealError": false,
+    "success": true
+  },
+  {
+    "route": "/compliance",
+    "status": 200,
+    "title": "Political Productivity Hub",
+    "hasContent": true,
+    "hasKorean": true,
+    "textLength": 12105,
+    "hasRealError": false,
+    "success": true
+  },
+  {
+    "route": "/settings/profile",
+    "status": 200,
+    "title": "Political Productivity Hub",
+    "hasContent": true,
+    "hasKorean": true,
+    "textLength": 12871,
+    "hasRealError": false,
+    "success": true
+  },
+  {
+    "route": "/analytics/campaigns",
+    "status": 200,
+    "title": "Political Productivity Hub",
+    "hasContent": true,
+    "hasKorean": true,
+    "textLength": 12834,
+    "hasRealError": false,
+    "success": true
+  }
+]

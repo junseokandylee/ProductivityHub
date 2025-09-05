@@ -1,0 +1,643 @@
+{
+  "timestamp": "2025-09-05T22:50:09.336Z",
+  "summary": {
+    "total": 54,
+    "passed": 0,
+    "failed": 54,
+    "coverage": "0.0"
+  },
+  "routes": [
+    {
+      "route": "/auth/login",
+      "type": "public",
+      "status": 500,
+      "loadTime": 117,
+      "error": "Error content detected on page",
+      "hasContent": true,
+      "hasTitle": "",
+      "koreanContent": false,
+      "specificChecks": {}
+    },
+    {
+      "route": "/auth/signup",
+      "type": "public",
+      "status": 500,
+      "loadTime": 90,
+      "error": "Error content detected on page",
+      "hasContent": true,
+      "hasTitle": "",
+      "koreanContent": false,
+      "specificChecks": {}
+    },
+    {
+      "route": "/auth/reset-password",
+      "type": "public",
+      "status": 500,
+      "loadTime": 102,
+      "error": "Error content detected on page",
+      "hasContent": true,
+      "hasTitle": "",
+      "koreanContent": false,
+      "specificChecks": {}
+    },
+    {
+      "route": "/auth/verify-email",
+      "type": "public",
+      "status": 500,
+      "loadTime": 84,
+      "error": "Error content detected on page",
+      "hasContent": true,
+      "hasTitle": "",
+      "koreanContent": false,
+      "specificChecks": {}
+    },
+    {
+      "route": "/terms",
+      "type": "public",
+      "status": 500,
+      "loadTime": 93,
+      "error": "Error content detected on page",
+      "hasContent": true,
+      "hasTitle": "",
+      "koreanContent": false,
+      "specificChecks": {}
+    },
+    {
+      "route": "/privacy",
+      "type": "public",
+      "status": 500,
+      "loadTime": 87,
+      "error": "Error content detected on page",
+      "hasContent": true,
+      "hasTitle": "",
+      "koreanContent": false,
+      "specificChecks": {}
+    },
+    {
+      "route": "/",
+      "type": "protected",
+      "status": 500,
+      "loadTime": 90,
+      "error": "Error content detected on page",
+      "hasContent": true,
+      "hasTitle": "",
+      "koreanContent": false,
+      "specificChecks": {}
+    },
+    {
+      "route": "/dashboard",
+      "type": "protected",
+      "status": 500,
+      "loadTime": 88,
+      "error": "Error content detected on page",
+      "hasContent": true,
+      "hasTitle": "",
+      "koreanContent": false,
+      "specificChecks": {}
+    },
+    {
+      "route": "/calendar",
+      "type": "protected",
+      "status": 500,
+      "loadTime": 102,
+      "error": "Error content detected on page",
+      "hasContent": true,
+      "hasTitle": "",
+      "koreanContent": false,
+      "specificChecks": {
+        "hasCalendarTitle": false,
+        "hasCalendarView": false
+      }
+    },
+    {
+      "route": "/activity-score",
+      "type": "protected",
+      "status": 500,
+      "loadTime": 86,
+      "error": "Error content detected on page",
+      "hasContent": true,
+      "hasTitle": "",
+      "koreanContent": false,
+      "specificChecks": {
+        "error": "locator.count: Unexpected token \"=\" while parsing css selector \".score, .points, text=점수\". Did you mean to CSS.escape it?"
+      }
+    },
+    {
+      "route": "/contacts",
+      "type": "protected",
+      "status": 500,
+      "loadTime": 100,
+      "error": "Error content detected on page",
+      "hasContent": true,
+      "hasTitle": "",
+      "koreanContent": false,
+      "specificChecks": {}
+    },
+    {
+      "route": "/contacts/import",
+      "type": "protected",
+      "status": 500,
+      "loadTime": 81,
+      "error": "Error content detected on page",
+      "hasContent": true,
+      "hasTitle": "",
+      "koreanContent": false,
+      "specificChecks": {}
+    },
+    {
+      "route": "/contacts/export",
+      "type": "protected",
+      "status": 500,
+      "loadTime": 89,
+      "error": "Error content detected on page",
+      "hasContent": true,
+      "hasTitle": "",
+      "koreanContent": false,
+      "specificChecks": {}
+    },
+    {
+      "route": "/contacts/deduplication",
+      "type": "protected",
+      "status": 500,
+      "loadTime": 96,
+      "error": "Error content detected on page",
+      "hasContent": true,
+      "hasTitle": "",
+      "koreanContent": false,
+      "specificChecks": {}
+    },
+    {
+      "route": "/segments",
+      "type": "protected",
+      "status": 500,
+      "loadTime": 84,
+      "error": "Error content detected on page",
+      "hasContent": true,
+      "hasTitle": "",
+      "koreanContent": false,
+      "specificChecks": {}
+    },
+    {
+      "route": "/campaigns",
+      "type": "protected",
+      "status": 500,
+      "loadTime": 83,
+      "error": "Error content detected on page",
+      "hasContent": true,
+      "hasTitle": "",
+      "koreanContent": false,
+      "specificChecks": {}
+    },
+    {
+      "route": "/campaigns/new",
+      "type": "protected",
+      "status": 500,
+      "loadTime": 98,
+      "error": "Error content detected on page",
+      "hasContent": true,
+      "hasTitle": "",
+      "koreanContent": false,
+      "specificChecks": {}
+    },
+    {
+      "route": "/campaigns/templates",
+      "type": "protected",
+      "status": 500,
+      "loadTime": 83,
+      "error": "Error content detected on page",
+      "hasContent": true,
+      "hasTitle": "",
+      "koreanContent": false,
+      "specificChecks": {}
+    },
+    {
+      "route": "/campaigns/scheduled",
+      "type": "protected",
+      "status": 500,
+      "loadTime": 97,
+      "error": "Error content detected on page",
+      "hasContent": true,
+      "hasTitle": "",
+      "koreanContent": false,
+      "specificChecks": {}
+    },
+    {
+      "route": "/campaigns/personalization",
+      "type": "protected",
+      "status": 500,
+      "loadTime": 75,
+      "error": "Error content detected on page",
+      "hasContent": true,
+      "hasTitle": "",
+      "koreanContent": false,
+      "specificChecks": {
+        "hasPersonalizationTitle": false,
+        "hasDemographics": false,
+        "hasDialectOptions": false
+      }
+    },
+    {
+      "route": "/inbox",
+      "type": "protected",
+      "status": 500,
+      "loadTime": 91,
+      "error": "Error content detected on page",
+      "hasContent": true,
+      "hasTitle": "",
+      "koreanContent": false,
+      "specificChecks": {}
+    },
+    {
+      "route": "/inbox/auto-reply",
+      "type": "protected",
+      "status": 500,
+      "loadTime": 77,
+      "error": "Error content detected on page",
+      "hasContent": true,
+      "hasTitle": "",
+      "koreanContent": false,
+      "specificChecks": {}
+    },
+    {
+      "route": "/reports",
+      "type": "protected",
+      "status": 500,
+      "loadTime": 83,
+      "error": "Error content detected on page",
+      "hasContent": true,
+      "hasTitle": "",
+      "koreanContent": false,
+      "specificChecks": {}
+    },
+    {
+      "route": "/reports/monthly",
+      "type": "protected",
+      "status": 500,
+      "loadTime": 81,
+      "error": "Error content detected on page",
+      "hasContent": true,
+      "hasTitle": "",
+      "koreanContent": false,
+      "specificChecks": {}
+    },
+    {
+      "route": "/reports/campaigns",
+      "type": "protected",
+      "status": 500,
+      "loadTime": 82,
+      "error": "Error content detected on page",
+      "hasContent": true,
+      "hasTitle": "",
+      "koreanContent": false,
+      "specificChecks": {}
+    },
+    {
+      "route": "/reports/contacts",
+      "type": "protected",
+      "status": 500,
+      "loadTime": 81,
+      "error": "Error content detected on page",
+      "hasContent": true,
+      "hasTitle": "",
+      "koreanContent": false,
+      "specificChecks": {}
+    },
+    {
+      "route": "/reports/quota",
+      "type": "protected",
+      "status": 500,
+      "loadTime": 82,
+      "error": "Error content detected on page",
+      "hasContent": true,
+      "hasTitle": "",
+      "koreanContent": false,
+      "specificChecks": {}
+    },
+    {
+      "route": "/analytics",
+      "type": "protected",
+      "status": 500,
+      "loadTime": 82,
+      "error": "Error content detected on page",
+      "hasContent": true,
+      "hasTitle": "",
+      "koreanContent": false,
+      "specificChecks": {}
+    },
+    {
+      "route": "/analytics/campaigns",
+      "type": "protected",
+      "status": 500,
+      "loadTime": 85,
+      "error": "Error content detected on page",
+      "hasContent": true,
+      "hasTitle": "",
+      "koreanContent": false,
+      "specificChecks": {
+        "hasAnalyticsTitle": false
+      }
+    },
+    {
+      "route": "/analytics/ab-tests",
+      "type": "protected",
+      "status": 500,
+      "loadTime": 82,
+      "error": "Error content detected on page",
+      "hasContent": true,
+      "hasTitle": "",
+      "koreanContent": false,
+      "specificChecks": {
+        "hasAnalyticsTitle": false
+      }
+    },
+    {
+      "route": "/analytics/costs",
+      "type": "protected",
+      "status": 500,
+      "loadTime": 82,
+      "error": "Error content detected on page",
+      "hasContent": true,
+      "hasTitle": "",
+      "koreanContent": false,
+      "specificChecks": {
+        "hasAnalyticsTitle": false
+      }
+    },
+    {
+      "route": "/settings",
+      "type": "protected",
+      "status": 500,
+      "loadTime": 82,
+      "error": "Error content detected on page",
+      "hasContent": true,
+      "hasTitle": "",
+      "koreanContent": false,
+      "specificChecks": {}
+    },
+    {
+      "route": "/settings/profile",
+      "type": "protected",
+      "status": 500,
+      "loadTime": 80,
+      "error": "Error content detected on page",
+      "hasContent": true,
+      "hasTitle": "",
+      "koreanContent": false,
+      "specificChecks": {
+        "hasSettingsTitle": false
+      }
+    },
+    {
+      "route": "/settings/tenant",
+      "type": "protected",
+      "status": 500,
+      "loadTime": 78,
+      "error": "Error content detected on page",
+      "hasContent": true,
+      "hasTitle": "",
+      "koreanContent": false,
+      "specificChecks": {
+        "hasSettingsTitle": false
+      }
+    },
+    {
+      "route": "/settings/billing",
+      "type": "protected",
+      "status": 500,
+      "loadTime": 82,
+      "error": "Error content detected on page",
+      "hasContent": true,
+      "hasTitle": "",
+      "koreanContent": false,
+      "specificChecks": {
+        "hasSettingsTitle": false
+      }
+    },
+    {
+      "route": "/settings/api-keys",
+      "type": "protected",
+      "status": 500,
+      "loadTime": 77,
+      "error": "Error content detected on page",
+      "hasContent": true,
+      "hasTitle": "",
+      "koreanContent": false,
+      "specificChecks": {
+        "hasSettingsTitle": false
+      }
+    },
+    {
+      "route": "/settings/organization",
+      "type": "protected",
+      "status": 500,
+      "loadTime": 85,
+      "error": "Error content detected on page",
+      "hasContent": true,
+      "hasTitle": "",
+      "koreanContent": false,
+      "specificChecks": {
+        "hasSettingsTitle": false
+      }
+    },
+    {
+      "route": "/settings/channels",
+      "type": "protected",
+      "status": 500,
+      "loadTime": 79,
+      "error": "Error content detected on page",
+      "hasContent": true,
+      "hasTitle": "",
+      "koreanContent": false,
+      "specificChecks": {
+        "hasSettingsTitle": false
+      }
+    },
+    {
+      "route": "/settings/users",
+      "type": "protected",
+      "status": 500,
+      "loadTime": 87,
+      "error": "Error content detected on page",
+      "hasContent": true,
+      "hasTitle": "",
+      "koreanContent": false,
+      "specificChecks": {
+        "hasSettingsTitle": false
+      }
+    },
+    {
+      "route": "/settings/quota",
+      "type": "protected",
+      "status": 500,
+      "loadTime": 83,
+      "error": "Error content detected on page",
+      "hasContent": true,
+      "hasTitle": "",
+      "koreanContent": false,
+      "specificChecks": {
+        "hasSettingsTitle": false
+      }
+    },
+    {
+      "route": "/settings/security",
+      "type": "protected",
+      "status": 500,
+      "loadTime": 88,
+      "error": "Error content detected on page",
+      "hasContent": true,
+      "hasTitle": "",
+      "koreanContent": false,
+      "specificChecks": {
+        "hasSettingsTitle": false
+      }
+    },
+    {
+      "route": "/help",
+      "type": "protected",
+      "status": 500,
+      "loadTime": 85,
+      "error": "Error content detected on page",
+      "hasContent": true,
+      "hasTitle": "",
+      "koreanContent": false,
+      "specificChecks": {}
+    },
+    {
+      "route": "/help/guide",
+      "type": "protected",
+      "status": 500,
+      "loadTime": 90,
+      "error": "Error content detected on page",
+      "hasContent": true,
+      "hasTitle": "",
+      "koreanContent": false,
+      "specificChecks": {}
+    },
+    {
+      "route": "/help/tutorial",
+      "type": "protected",
+      "status": 500,
+      "loadTime": 87,
+      "error": "Error content detected on page",
+      "hasContent": true,
+      "hasTitle": "",
+      "koreanContent": false,
+      "specificChecks": {}
+    },
+    {
+      "route": "/help/faq",
+      "type": "protected",
+      "status": 500,
+      "loadTime": 87,
+      "error": "Error content detected on page",
+      "hasContent": true,
+      "hasTitle": "",
+      "koreanContent": false,
+      "specificChecks": {}
+    },
+    {
+      "route": "/help/contact",
+      "type": "protected",
+      "status": 500,
+      "loadTime": 80,
+      "error": "Error content detected on page",
+      "hasContent": true,
+      "hasTitle": "",
+      "koreanContent": false,
+      "specificChecks": {}
+    },
+    {
+      "route": "/notifications",
+      "type": "protected",
+      "status": 500,
+      "loadTime": 84,
+      "error": "Error content detected on page",
+      "hasContent": true,
+      "hasTitle": "",
+      "koreanContent": false,
+      "specificChecks": {}
+    },
+    {
+      "route": "/compliance",
+      "type": "protected",
+      "status": 500,
+      "loadTime": 77,
+      "error": "Error content detected on page",
+      "hasContent": true,
+      "hasTitle": "",
+      "koreanContent": false,
+      "specificChecks": {
+        "hasComplianceTitle": false,
+        "hasKoreanLaws": false,
+        "hasMetrics": false,
+        "hasTabInterface": false
+      }
+    },
+    {
+      "route": "/contacts/1",
+      "type": "dynamic",
+      "status": 500,
+      "loadTime": 83,
+      "error": "Error content detected on page",
+      "hasContent": true,
+      "hasTitle": "",
+      "koreanContent": false,
+      "specificChecks": {}
+    },
+    {
+      "route": "/campaigns/1",
+      "type": "dynamic",
+      "status": 500,
+      "loadTime": 82,
+      "error": "Error content detected on page",
+      "hasContent": true,
+      "hasTitle": "",
+      "koreanContent": false,
+      "specificChecks": {}
+    },
+    {
+      "route": "/campaigns/1/monitor",
+      "type": "dynamic",
+      "status": 500,
+      "loadTime": 86,
+      "error": "Error content detected on page",
+      "hasContent": true,
+      "hasTitle": "",
+      "koreanContent": false,
+      "specificChecks": {}
+    },
+    {
+      "route": "/campaigns/1/analytics",
+      "type": "dynamic",
+      "status": 500,
+      "loadTime": 88,
+      "error": "Error content detected on page",
+      "hasContent": true,
+      "hasTitle": "",
+      "koreanContent": false,
+      "specificChecks": {}
+    },
+    {
+      "route": "/campaigns/1/analytics/print",
+      "type": "dynamic",
+      "status": 500,
+      "loadTime": 95,
+      "error": "Error content detected on page",
+      "hasContent": true,
+      "hasTitle": "",
+      "koreanContent": false,
+      "specificChecks": {}
+    },
+    {
+      "route": "/inbox/1",
+      "type": "dynamic",
+      "status": 500,
+      "loadTime": 79,
+      "error": "Error content detected on page",
+      "hasContent": true,
+      "hasTitle": "",
+      "koreanContent": false,
+      "specificChecks": {}
+    }
+  ]
+}
