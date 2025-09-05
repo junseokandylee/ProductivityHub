@@ -230,7 +230,7 @@ public class ActivityScoringService : IActivityScoringService
             Tags = contact.ContactTags?.Select(ct => new TagDto
             {
                 Id = ct.Tag.Id,
-                Name = ct.Tag.Name,
+                Name = ct.Tag.FullName,
                 Color = ct.Tag.Color,
                 Description = ct.Tag.Description,
                 ContactCount = 0, // Not calculated here for performance

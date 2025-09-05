@@ -105,16 +105,18 @@ export function Header({
           </Button>
 
           {/* Notifications */}
-          <Button variant="ghost" size="sm" className="relative">
-            <Bell className="h-5 w-5" />
-            {unreadNotifications > 0 && (
-              <Badge 
-                variant="destructive" 
-                className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center text-xs p-0"
-              >
-                {unreadNotifications > 9 ? '9+' : unreadNotifications}
-              </Badge>
-            )}
+          <Button variant="ghost" size="sm" className="relative" asChild>
+            <a href="/notifications">
+              <Bell className="h-5 w-5" />
+              {unreadNotifications > 0 && (
+                <Badge 
+                  variant="destructive" 
+                  className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center text-xs p-0"
+                >
+                  {unreadNotifications > 9 ? '9+' : unreadNotifications}
+                </Badge>
+              )}
+            </a>
           </Button>
 
           {/* User menu */}

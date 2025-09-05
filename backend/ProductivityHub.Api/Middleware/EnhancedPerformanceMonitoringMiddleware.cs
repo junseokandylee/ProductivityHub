@@ -59,9 +59,12 @@ public class EnhancedPerformanceMonitoringMiddleware
 
         try
         {
-            // Add request tracking headers
-            context.Response.Headers.Add("X-Request-ID", requestId);
-            context.Response.Headers.Add("X-Server-Timing", $"start;dur=0");
+            // Add request tracking headers (only if response hasn't started)
+            if (!context.Response.HasStarted)
+            {
+                context.Response.Headers.Add("X-Request-ID", requestId);
+                context.Response.Headers.Add("X-Server-Timing", $"start;dur=0");
+            }
             
             await _next(context);
         }
@@ -87,9 +90,12 @@ public class EnhancedPerformanceMonitoringMiddleware
             // Update performance counters
             UpdatePerformanceCounters(responseTime);
             
-            // Add timing headers
-            context.Response.Headers["X-Response-Time"] = $"{responseTime}ms";
-            context.Response.Headers["X-Memory-Delta"] = $"{memoryDelta:N0}b";
+            // Add timing headers (only if response hasn't started)
+            if (!context.Response.HasStarted)
+            {
+                context.Response.Headers["X-Response-Time"] = $"{responseTime}ms";
+                context.Response.Headers["X-Memory-Delta"] = $"{memoryDelta:N0}b";
+            }
             
             // Log performance metrics
             LogPerformanceMetrics(context, endpoint, responseTime, memoryDelta, gcActivity, startTime);

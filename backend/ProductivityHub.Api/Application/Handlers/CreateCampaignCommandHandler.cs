@@ -74,7 +74,7 @@ public class CreateCampaignCommandHandler : IRequestHandler<CreateCampaignComman
                 var campaign = new Campaign
                 {
                     TenantId = command.TenantId,
-                    Name = command.Request.Name,
+                    Name = command.Request.FullName,
                     MessageTitle = command.Request.MessageTitle,
                     MessageBody = command.Request.MessageBody,
                     Variables = command.Request.Variables != null ? JsonSerializer.Serialize(command.Request.Variables) : null,

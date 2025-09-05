@@ -16,7 +16,11 @@ import {
   Database,
   Shield,
   CreditCard,
-  Key
+  Key,
+  Brain,
+  Gavel,
+  AlertTriangle,
+  DollarSign
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -48,7 +52,9 @@ const navigationItems: NavItem[] = [
     children: [
       { title: '캠페인 목록', href: '/campaigns', icon: MessageSquare },
       { title: '새 캠페인', href: '/campaigns/new', icon: MessageSquare },
+      { title: '예약된 캠페인', href: '/campaigns/scheduled', icon: Calendar },
       { title: '템플릿', href: '/campaigns/templates', icon: MessageSquare },
+      { title: 'AI 메시지 개인화', href: '/campaigns/personalization', icon: Brain },
     ],
   },
   {
@@ -70,6 +76,18 @@ const navigationItems: NavItem[] = [
       { title: '캠페인 성과', href: '/analytics/campaigns', icon: BarChart3 },
       { title: 'A/B 테스트', href: '/analytics/ab-tests', icon: Zap },
       { title: '비용 분석', href: '/analytics/costs', icon: CreditCard },
+    ],
+  },
+  {
+    title: '규정 준수',
+    href: '/compliance',
+    icon: Gavel,
+    children: [
+      { title: '모니터링 대시보드', href: '/compliance', icon: Shield },
+      { title: '위반 관리', href: '/compliance?tab=violations', icon: AlertTriangle },
+      { title: '지출 모니터링', href: '/compliance?tab=spending', icon: DollarSign },
+      { title: '규칙 관리', href: '/compliance?tab=rules', icon: Settings },
+      { title: '규정 준수 보고서', href: '/compliance?tab=reports', icon: BarChart3 },
     ],
   },
   {

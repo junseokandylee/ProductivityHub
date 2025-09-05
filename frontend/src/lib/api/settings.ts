@@ -212,6 +212,186 @@ export interface UpdateSecuritySettingsRequest {
   ipWhitelist?: string[]
 }
 
+// Profile Types
+export interface UserProfile {
+  id: string
+  email: string
+  name: string
+  avatar?: string
+  phone?: string
+  position?: string
+  department?: string
+  bio?: string
+  timezone: string
+  language: string
+  dateFormat: string
+  notifications: {
+    email: boolean
+    push: boolean
+    marketing: boolean
+    security: boolean
+  }
+  preferences: {
+    theme: 'light' | 'dark' | 'auto'
+    compactMode: boolean
+    defaultView: string
+  }
+  createdAt: string
+  updatedAt: string
+  lastLogin?: string
+}
+
+export interface UpdateProfileRequest {
+  name?: string
+  phone?: string
+  position?: string
+  department?: string
+  bio?: string
+  timezone?: string
+  language?: string
+  dateFormat?: string
+  notifications?: {
+    email?: boolean
+    push?: boolean
+    marketing?: boolean
+    security?: boolean
+  }
+  preferences?: {
+    theme?: 'light' | 'dark' | 'auto'
+    compactMode?: boolean
+    defaultView?: string
+  }
+}
+
+export interface ChangePasswordRequest {
+  currentPassword: string
+  newPassword: string
+  confirmPassword: string
+}
+
+export interface UploadAvatarRequest {
+  file: File
+}
+
+// Tenant Types  
+export interface TenantSettings {
+  id: string
+  name: string
+  domain?: string
+  subdomain?: string
+  customDomain?: string
+  branding: {
+    primaryColor: string
+    secondaryColor: string
+    logoUrl?: string
+    faviconUrl?: string
+    customCss?: string
+  }
+  features: {
+    maxUsers: number
+    maxCampaigns: number
+    maxContacts: number
+    customDomain: boolean
+    advancedAnalytics: boolean
+    apiAccess: boolean
+    whiteLabeling: boolean
+  }
+  subscription: {
+    plan: 'starter' | 'professional' | 'enterprise' | 'custom'
+    status: 'active' | 'trial' | 'suspended' | 'cancelled'
+    trialEndsAt?: string
+    nextBillingDate?: string
+  }
+  security: {
+    enforced2FA: boolean
+    ipWhitelisting: boolean
+    ssoEnabled: boolean
+    passwordPolicy: 'standard' | 'strict'
+  }
+  integrations: {
+    webhook?: string
+    zapier: boolean
+    slack?: string
+    teams?: string
+  }
+}
+
+export interface UpdateTenantSettingsRequest {
+  name?: string
+  domain?: string
+  subdomain?: string
+  customDomain?: string
+  branding?: {
+    primaryColor?: string
+    secondaryColor?: string
+    logoUrl?: string
+    faviconUrl?: string
+    customCss?: string
+  }
+  security?: {
+    enforced2FA?: boolean
+    ipWhitelisting?: boolean
+    ssoEnabled?: boolean
+    passwordPolicy?: 'standard' | 'strict'
+  }
+  integrations?: {
+    webhook?: string
+    zapier?: boolean
+    slack?: string
+    teams?: string
+  }
+}
+
+// Billing Types
+export interface BillingInfo {
+  subscription: {
+    id: string
+    plan: 'starter' | 'professional' | 'enterprise' | 'custom'
+    status: 'active' | 'trial' | 'suspended' | 'cancelled'
+    currentPeriodStart: string
+    currentPeriodEnd: string
+    trialEnd?: string
+    cancelAtPeriodEnd: boolean
+  }
+  usage: {
+    users: { current: number; limit: number }
+    campaigns: { current: number; limit: number }
+    contacts: { current: number; limit: number }
+    messages: { current: number; limit: number }
+  }
+  paymentMethod?: {
+    type: 'card' | 'bank'
+    last4: string
+    brand: string
+    expiryMonth: number
+    expiryYear: number
+  }
+  invoices: Array<{
+    id: string
+    date: string
+    amount: number
+    status: 'paid' | 'pending' | 'failed'
+    downloadUrl: string
+  }>
+  upcomingInvoice?: {
+    amount: number
+    date: string
+  }
+}
+
+export interface UpdatePaymentMethodRequest {
+  token: string
+}
+
+export interface ChangePlanRequest {
+  planId: string
+}
+
+export interface CancelSubscriptionRequest {
+  cancelAtPeriodEnd: boolean
+  reason?: string
+}
+
 // API Functions
 async function fetchOrganization(): Promise<Organization> {
   const { data } = await apiClient.get<Organization>('/settings/organization')
@@ -289,6 +469,97 @@ async function createApiToken(request: CreateApiTokenRequest): Promise<ApiToken>
 
 async function revokeApiToken(tokenId: string): Promise<void> {
   await apiClient.delete(`/settings/security/tokens/${tokenId}`)
+}
+
+// Profile API Functions
+async function fetchUserProfile(): Promise<UserProfile> {
+  const { data } = await apiClient.get<UserProfile>('/settings/profile')
+  return data
+}
+
+async function updateUserProfile(request: UpdateProfileRequest): Promise<UserProfile> {
+  const { data } = await apiClient.put<UserProfile>('/settings/profile', request)
+  return data
+}
+
+async function changePassword(request: ChangePasswordRequest): Promise<{ success: boolean }> {
+  const { data } = await apiClient.post<{ success: boolean }>('/settings/profile/password', request)
+  return data
+}
+
+async function uploadAvatar(file: File): Promise<{ avatarUrl: string }> {
+  const formData = new FormData()
+  formData.append('avatar', file)
+  
+  const { data } = await apiClient.post<{ avatarUrl: string }>('/settings/profile/avatar', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
+  return data
+}
+
+// Tenant API Functions
+async function fetchTenantSettings(): Promise<TenantSettings> {
+  const { data } = await apiClient.get<TenantSettings>('/settings/tenant')
+  return data
+}
+
+async function updateTenantSettings(request: UpdateTenantSettingsRequest): Promise<TenantSettings> {
+  const { data } = await apiClient.put<TenantSettings>('/settings/tenant', request)
+  return data
+}
+
+async function uploadTenantLogo(file: File): Promise<{ logoUrl: string }> {
+  const formData = new FormData()
+  formData.append('logo', file)
+  
+  const { data } = await apiClient.post<{ logoUrl: string }>('/settings/tenant/logo', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
+  return data
+}
+
+async function uploadTenantFavicon(file: File): Promise<{ faviconUrl: string }> {
+  const formData = new FormData()
+  formData.append('favicon', file)
+  
+  const { data } = await apiClient.post<{ faviconUrl: string }>('/settings/tenant/favicon', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
+  return data
+}
+
+// Billing API Functions
+async function fetchBillingInfo(): Promise<BillingInfo> {
+  const { data } = await apiClient.get<BillingInfo>('/settings/billing')
+  return data
+}
+
+async function updatePaymentMethod(request: UpdatePaymentMethodRequest): Promise<BillingInfo> {
+  const { data } = await apiClient.post<BillingInfo>('/settings/billing/payment-method', request)
+  return data
+}
+
+async function changePlan(request: ChangePlanRequest): Promise<BillingInfo> {
+  const { data } = await apiClient.post<BillingInfo>('/settings/billing/change-plan', request)
+  return data
+}
+
+async function cancelSubscription(request: CancelSubscriptionRequest): Promise<BillingInfo> {
+  const { data } = await apiClient.post<BillingInfo>('/settings/billing/cancel', request)
+  return data
+}
+
+async function downloadInvoice(invoiceId: string): Promise<Blob> {
+  const { data } = await apiClient.get(`/settings/billing/invoices/${invoiceId}/download`, {
+    responseType: 'blob'
+  })
+  return data
 }
 
 // React Query Hooks
@@ -465,6 +736,156 @@ export function useRevokeApiToken() {
       queryClient.setQueryData(['settings', 'security', 'tokens'], (old: ApiToken[] = []) =>
         old.map(token => token.id === tokenId ? { ...token, status: 'revoked' as const } : token)
       )
+    }
+  })
+}
+
+// Profile Hooks
+export function useUserProfile() {
+  return useQuery({
+    queryKey: ['settings', 'profile'],
+    queryFn: fetchUserProfile,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    gcTime: 1000 * 60 * 30, // 30 minutes
+    retry: 2
+  })
+}
+
+export function useUpdateUserProfile() {
+  const queryClient = useQueryClient()
+  
+  return useMutation({
+    mutationFn: updateUserProfile,
+    onSuccess: (data) => {
+      queryClient.setQueryData(['settings', 'profile'], data)
+    }
+  })
+}
+
+export function useChangePassword() {
+  return useMutation({
+    mutationFn: changePassword
+  })
+}
+
+export function useUploadAvatar() {
+  const queryClient = useQueryClient()
+  
+  return useMutation({
+    mutationFn: uploadAvatar,
+    onSuccess: (data) => {
+      queryClient.setQueryData(['settings', 'profile'], (old: UserProfile | undefined) => 
+        old ? { ...old, avatar: data.avatarUrl } : old
+      )
+    }
+  })
+}
+
+// Tenant Hooks
+export function useTenantSettings() {
+  return useQuery({
+    queryKey: ['settings', 'tenant'],
+    queryFn: fetchTenantSettings,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    gcTime: 1000 * 60 * 30, // 30 minutes
+    retry: 2
+  })
+}
+
+export function useUpdateTenantSettings() {
+  const queryClient = useQueryClient()
+  
+  return useMutation({
+    mutationFn: updateTenantSettings,
+    onSuccess: (data) => {
+      queryClient.setQueryData(['settings', 'tenant'], data)
+    }
+  })
+}
+
+export function useUploadTenantLogo() {
+  const queryClient = useQueryClient()
+  
+  return useMutation({
+    mutationFn: uploadTenantLogo,
+    onSuccess: (data) => {
+      queryClient.setQueryData(['settings', 'tenant'], (old: TenantSettings | undefined) => 
+        old ? { ...old, branding: { ...old.branding, logoUrl: data.logoUrl } } : old
+      )
+    }
+  })
+}
+
+export function useUploadTenantFavicon() {
+  const queryClient = useQueryClient()
+  
+  return useMutation({
+    mutationFn: uploadTenantFavicon,
+    onSuccess: (data) => {
+      queryClient.setQueryData(['settings', 'tenant'], (old: TenantSettings | undefined) => 
+        old ? { ...old, branding: { ...old.branding, faviconUrl: data.faviconUrl } } : old
+      )
+    }
+  })
+}
+
+// Billing Hooks
+export function useBillingInfo() {
+  return useQuery({
+    queryKey: ['settings', 'billing'],
+    queryFn: fetchBillingInfo,
+    staleTime: 1000 * 60 * 2, // 2 minutes
+    gcTime: 1000 * 60 * 10, // 10 minutes
+    retry: 2
+  })
+}
+
+export function useUpdatePaymentMethod() {
+  const queryClient = useQueryClient()
+  
+  return useMutation({
+    mutationFn: updatePaymentMethod,
+    onSuccess: (data) => {
+      queryClient.setQueryData(['settings', 'billing'], data)
+    }
+  })
+}
+
+export function useChangePlan() {
+  const queryClient = useQueryClient()
+  
+  return useMutation({
+    mutationFn: changePlan,
+    onSuccess: (data) => {
+      queryClient.setQueryData(['settings', 'billing'], data)
+    }
+  })
+}
+
+export function useCancelSubscription() {
+  const queryClient = useQueryClient()
+  
+  return useMutation({
+    mutationFn: cancelSubscription,
+    onSuccess: (data) => {
+      queryClient.setQueryData(['settings', 'billing'], data)
+    }
+  })
+}
+
+export function useDownloadInvoice() {
+  return useMutation({
+    mutationFn: downloadInvoice,
+    onSuccess: (data, invoiceId) => {
+      // Create download link
+      const url = window.URL.createObjectURL(data)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `invoice-${invoiceId}.pdf`
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      window.URL.revokeObjectURL(url)
     }
   })
 }

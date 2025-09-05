@@ -71,12 +71,12 @@ public class ContactManagementIntegrationTests : IntegrationTestBase
         
         contactDetail.Should().NotBeNull();
         contactDetail.Id.Should().Be(firstContact.Id);
-        contactDetail.FullName.Should().Be(firstContact.FullName);
+        contactDetail.Name.Should().Be(firstContact.Name);
 
         // Step 5: Test contact editing
         var updateRequest = new UpdateContactRequest
         {
-            FullName = contactDetail.FullName + " Updated",
+            FullName = contactDetail.Name + " Updated",
             Phone = contactDetail.Phone,
             Email = contactDetail.Email,
             KakaoId = contactDetail.KakaoId,
@@ -86,7 +86,7 @@ public class ContactManagementIntegrationTests : IntegrationTestBase
         };
 
         var updatedContact = await PostAsync<ContactDto>($"/api/contacts/{contactDetail.Id}", updateRequest);
-        updatedContact.FullName.Should().EndWith(" Updated");
+        updatedContact.Name.Should().EndWith(" Updated");
         updatedContact.Notes.Should().Be("Updated via integration test");
         updatedContact.Tags.Should().HaveCount(1);
         updatedContact.Tags.First().Id.Should().Be(createdTag.Id);

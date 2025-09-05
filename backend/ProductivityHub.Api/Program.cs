@@ -1,4 +1,5 @@
 using System.Text;
+using Amazon.SimpleEmail;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -115,6 +116,10 @@ builder.Services.AddScoped<ITagService, TagService>();
 builder.Services.AddScoped<IContactImportService, ContactImportService>();
 builder.Services.AddScoped<IDeduplicationService, DeduplicationService>();
 
+// Add Korean AI Personalization Services
+builder.Services.AddHttpClient<IKoreanAIPersonalizationService, KoreanAIPersonalizationService>();
+builder.Services.AddScoped<IKoreanAIPersonalizationService, KoreanAIPersonalizationService>();
+
 // Add Segment Builder Services
 builder.Services.AddScoped<ISegmentEvaluationService, SegmentEvaluationService>();
 builder.Services.AddScoped<ISegmentService, SegmentService>();
@@ -129,6 +134,20 @@ builder.Services.AddScoped<IBulkOperationsService, BulkOperationsService>();
 // Add Export Services
 builder.Services.AddScoped<IContactExportService, ContactExportService>();
 
+// Add Email Services
+builder.Services.Configure<AwsSesConfiguration>(
+    builder.Configuration.GetSection(AwsSesConfiguration.SectionName));
+
+// AWS SES Configuration
+builder.Services.AddAWSService<IAmazonSimpleEmailService>(builder.Configuration.GetAWSOptions());
+builder.Services.AddScoped<IEmailService, AmazonSesEmailService>();
+
+// Add Korean Election Law Compliance Services
+builder.Services.AddScoped<IKoreanElectionLawComplianceService, KoreanElectionLawComplianceService>();
+
+// Add Korean Language Processing Services
+builder.Services.AddScoped<IKoreanLanguageProcessingService, KoreanLanguageProcessingService>();
+
 // Add Database Seed Service
 builder.Services.AddScoped<DatabaseSeedService>();
 
@@ -138,15 +157,24 @@ builder.Services.Configure<HostOptions>(hostOptions =>
     hostOptions.BackgroundServiceExceptionBehavior = BackgroundServiceExceptionBehavior.Ignore;
 });
 
-// Add Metrics Aggregator Background Service
-builder.Services.AddHostedService<MetricsAggregatorService>();
-
-// Add Contact Import Processor Background Service
-builder.Services.AddHostedService<ContactImportProcessorService>();
-
-// Add Activity Scoring Background Services
-builder.Services.AddHostedService<ActivityScoringBackgroundService>();
+// Add Redis-dependent Background Services only in production or when Redis is available
+if (!builder.Environment.IsDevelopment())
+{
+    builder.Services.AddHostedService<MetricsAggregatorService>();
+    builder.Services.AddHostedService<ContactImportProcessorService>();
+    builder.Services.AddHostedService<ActivityScoringBackgroundService>();
+    
+    Console.WriteLine("✓ Redis-dependent background services registered for production environment");
+}
+else
+{
+    Console.WriteLine("⚠️  Redis-dependent background services disabled in development mode");
+}
 builder.Services.AddSingleton<ActivityScoringEventService>();
+
+// Add Campaign Scheduler Service (not Redis-dependent)
+builder.Services.AddHostedService<CampaignSchedulerService>();
+Console.WriteLine("✓ Campaign Scheduler Service registered");
 
 // Add Health Checks
 builder.Services.AddHealthChecks()
@@ -491,7 +519,7 @@ app.MapGet("/auth/profile", async (HttpContext context, ApplicationDbContext db)
         name = user.Name,
         role = user.Role,
         tenantId = user.TenantId,
-        tenantName = user.Tenant.Name,
+        tenantName = user.Tenant.FullName,
         lastLoginAt = user.LastLoginAt
     });
 })

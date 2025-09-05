@@ -141,7 +141,7 @@ public class SegmentsController : ControllerBase
             var tenantId = GetTenantId();
             var userId = GetUserId();
             
-            var clonedSegment = await _segmentService.CloneSegmentAsync(tenantId, userId, id, request.Name, request.Description);
+            var clonedSegment = await _segmentService.CloneSegmentAsync(tenantId, userId, id, request.FullName, request.Description);
             return CreatedAtAction(nameof(GetSegment), new { id = clonedSegment.Id }, clonedSegment);
         }
         catch (ArgumentException ex)

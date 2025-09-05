@@ -38,7 +38,7 @@ public class GetContactGroupsQueryHandler : IRequestHandler<GetContactGroupsQuer
         return groups.Select(g => new ContactGroupResponse
         {
             Id = g.Id,
-            Name = g.Name,
+            Name = g.FullName,
             Description = g.Description,
             Count = g.Members.Count,
             CreatedAt = g.CreatedAt,

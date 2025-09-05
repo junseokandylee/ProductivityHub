@@ -427,7 +427,7 @@ public class TimeSeriesAnalyticsController : ControllerBase
 
             funnelStages.Add(new FunnelStage
             {
-                Name = stage.Name,
+                Name = stage.FullName,
                 DisplayName = stage.DisplayName,
                 Count = stage.Count,
                 ConversionRate = stage.Order == 1 ? 100 : conversionRate,
@@ -458,7 +458,7 @@ public class TimeSeriesAnalyticsController : ControllerBase
             Channel = result.Channel ?? "Unknown",
             Stages = stages,
             OverallConversionRate = overallConversion,
-            BestStage = bestStage.Name,
+            BestStage = bestStage.FullName,
             WorstStage = worstStage.Name
         };
     }

@@ -1,4 +1,5 @@
 // Campaign Wizard Types and Interfaces
+import { SchedulingSettings, DEFAULT_SCHEDULING_SETTINGS, ScheduleType } from './campaign-schedule';
 
 export interface AudienceSelection {
   groupIds: string[];
@@ -31,17 +32,22 @@ export interface ReviewData {
   scheduledAt?: Date;
 }
 
+export interface SchedulingData {
+  scheduling: SchedulingSettings;
+}
+
 export interface CampaignWizardState {
   currentStep: number;
   audience: AudienceSelection;
   message: MessageComposition;
   channels: ChannelSettings;
+  scheduling: SchedulingSettings;
   review: ReviewData;
   isSubmitting: boolean;
   errors: Record<string, string[]>;
 }
 
-export type WizardStep = 1 | 2 | 3 | 4;
+export type WizardStep = 1 | 2 | 3 | 4 | 5;
 
 export interface StepValidation {
   isValid: boolean;
@@ -54,6 +60,7 @@ export type WizardAction =
   | { type: 'SET_AUDIENCE'; payload: Partial<AudienceSelection> }
   | { type: 'SET_MESSAGE'; payload: Partial<MessageComposition> }
   | { type: 'SET_CHANNELS'; payload: Partial<ChannelSettings> }
+  | { type: 'SET_SCHEDULING'; payload: Partial<SchedulingSettings> }
   | { type: 'SET_REVIEW'; payload: Partial<ReviewData> }
   | { type: 'SET_SUBMITTING'; payload: boolean }
   | { type: 'SET_ERRORS'; payload: { step: WizardStep; errors: string[] } }
@@ -87,6 +94,11 @@ export const WIZARD_STEPS: StepConfig[] = [
   },
   {
     step: 4,
+    title: 'Scheduling',
+    description: 'Set when your campaign should be sent'
+  },
+  {
+    step: 5,
     title: 'Review & Send',
     description: 'Review your campaign and send'
   }
@@ -115,6 +127,13 @@ export const initialWizardState: CampaignWizardState = {
     ],
     channelOrder: ['SMS', 'KAKAO'],
     fallbackEnabled: true
+  },
+  scheduling: {
+    scheduleType: ScheduleType.Immediate,
+    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    isRecurring: false,
+    triggerDelayMinutes: 0,
+    priority: 5
   },
   review: {
     estimatedCost: 0,

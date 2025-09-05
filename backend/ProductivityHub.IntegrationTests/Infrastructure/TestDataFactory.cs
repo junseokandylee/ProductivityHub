@@ -59,7 +59,7 @@ public static class TestDataFactory
             {
                 case 1: // Same phone, different email
                     duplicate.Phone = originalContact.Phone;
-                    duplicate.Email = GenerateEmailFromName(duplicateFaker, duplicate.FullName + "2");
+                    duplicate.Email = GenerateEmailFromName(duplicateFaker, duplicate.Name + "2");
                     duplicate.KakaoId = duplicateFaker.Random.Bool(0.5f) ? duplicateFaker.Internet.UserName() : null;
                     break;
                 case 2: // Same email, different phone
@@ -69,14 +69,14 @@ public static class TestDataFactory
                     break;
                 case 3: // Same KakaoId, different phone/email
                     duplicate.Phone = GenerateKoreanPhoneNumber(duplicateFaker);
-                    duplicate.Email = GenerateEmailFromName(duplicateFaker, duplicate.FullName + "3");
+                    duplicate.Email = GenerateEmailFromName(duplicateFaker, duplicate.Name + "3");
                     duplicate.KakaoId = originalContact.KakaoId;
                     break;
                 case 4: // Exact duplicate with minor name variation
                     duplicate.Phone = originalContact.Phone;
                     duplicate.Email = originalContact.Email;
                     duplicate.KakaoId = originalContact.KakaoId;
-                    duplicate.FullName = originalContact.FullName.Replace(" ", ""); // Remove space
+                    duplicate.Name = originalContact.Name.Replace(" ", ""); // Remove space
                     break;
             }
 
@@ -104,7 +104,7 @@ public static class TestDataFactory
         var faker = new Faker<Tag>()
             .RuleFor(t => t.Id, f => Guid.NewGuid())
             .RuleFor(t => t.TenantId, _ => tenantId)
-            .RuleFor(t => t.Name, f => f.PickRandom(tagNames))
+            .RuleFor(t => t.FullName, f => f.PickRandom(tagNames))
             .RuleFor(t => t.Color, f => f.PickRandom(colorPalette))
             .RuleFor(t => t.Description, f => f.Random.Bool(0.6f) ? f.Lorem.Sentence() : null)
             .RuleFor(t => t.CreatedAt, f => f.Date.Between(DateTime.UtcNow.AddMonths(-6), DateTime.UtcNow))

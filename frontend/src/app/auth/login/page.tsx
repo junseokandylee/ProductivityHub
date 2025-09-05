@@ -15,6 +15,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Separator } from '@/components/ui/separator'
 import { useToast } from '@/hooks/use-toast'
 import { Eye, EyeOff, Mail, Lock, ArrowRight, AlertCircle, LogIn, Building } from 'lucide-react'
+import { authAPI } from '@/lib/auth/api'
 
 const loginSchema = z.object({
   email: z.string().email('올바른 이메일 주소를 입력해주세요'),
@@ -63,25 +64,20 @@ export default function LoginPage() {
     setServerError('')
     
     try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          email: data.email,
-          password: data.password,
-          rememberMe: data.rememberMe
-        })
+      const result = await authAPI.login({
+        email: data.email,
+        password: data.password
       })
 
-      const result = await response.json()
-
-      if (!response.ok) {
+      if (!result.success) {
         throw new Error(result.message || '로그인에 실패했습니다')
       }
 
-      // Success - cookie should be set by the server
+      // Success - store token if provided
+      if (result.token) {
+        localStorage.setItem('auth-token', result.token)
+      }
+
       toast({
         title: "로그인 성공",
         description: "정치생산성허브에 오신 것을 환영합니다.",
